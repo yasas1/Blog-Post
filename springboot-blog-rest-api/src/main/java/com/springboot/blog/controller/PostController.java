@@ -1,6 +1,7 @@
 package com.springboot.blog.controller;
 
 import com.springboot.blog.payload.PostDto;
+import com.springboot.blog.payload.ResultResponse;
 import com.springboot.blog.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,8 +29,8 @@ public class PostController {
 
     //get all posts api
     @GetMapping
-    public List<PostDto> getAllPosts(@RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-                                     @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize){
+    public ResultResponse<PostDto> getAllPosts(@RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+                                               @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize){
         return this.postService.getAllPosts(pageNo, pageSize);
     }
 
