@@ -9,6 +9,7 @@ import com.springboot.blog.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,12 +34,15 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public ResultResponse<PostDto> getAllPosts(int pageNo, int pageSize) {
-        PageRequest pageRequest = PageRequest.of(pageNo, pageSize);
+    public ResultResponse<PostDto> getAllPosts(int pageNo, int pageSize, String sortBy, String sortDir) {
+
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.DESC.name()) ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        PageRequest pageRequest = PageRequest.of(pageNo, pageSize, sort);
+
         Page<Post> pageablePosts = postRepository.findAll(pageRequest);
 
         List<PostDto> content = pageablePosts.getContent().stream().map(this::mapToDto).collect(Collectors.toList());
-        
+
         ResultResponse<PostDto> resultResponse = new ResultResponse<>();
         resultResponse.setContent(content);
         resultResponse.setPageNo(pageablePosts.getNumber());

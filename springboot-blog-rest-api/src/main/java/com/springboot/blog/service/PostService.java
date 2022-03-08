@@ -6,7 +6,7 @@ import com.springboot.blog.payload.ResultResponse;
 public interface PostService {
     PostDto createPost(PostDto postDto);
 
-    ResultResponse<PostDto> getAllPosts(int pageNo, int pageSize);
+    ResultResponse<PostDto> getAllPosts(int pageNo, int pageSize, String sortBy, String sortDir);
 
     PostDto getPostById(long id);
 
