@@ -10,6 +10,9 @@ import com.springboot.blog.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class CommentServiceImpl implements CommentService {
 
@@ -28,13 +31,23 @@ public class CommentServiceImpl implements CommentService {
 
         Comment comment = this.mapToEntity(commentDto);
 
-        Post post = postRepository.findById(postId).orElseThrow(() -> new ResourceNotFoundException("Post", "id", postId));
+        Post post = this.postRepository.findById(postId).orElseThrow(() -> new ResourceNotFoundException("Post", "id", postId));
 
         comment.setPost(post);
 
-        Comment savedComment = commentRepository.save(comment);
+        Comment savedComment = this.commentRepository.save(comment);
 
         return this.mapToDto(savedComment);
+    }
+
+    @Override
+    public List<CommentDto> getCommentsByPostId(long postId) {
+
+        Post post = this.postRepository.findById(postId).orElseThrow(() -> new ResourceNotFoundException("Post", "id", postId));
+
+        List<Comment> commentsByPostId = this.commentRepository.findByPostId(post.getId());
+
+        return commentsByPostId.stream().map(this::mapToDto).collect(Collectors.toList());
     }
 
     private CommentDto mapToDto(Comment comment){
