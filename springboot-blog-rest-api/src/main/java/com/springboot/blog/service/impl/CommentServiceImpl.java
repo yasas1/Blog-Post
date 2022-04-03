@@ -50,7 +50,17 @@ public class CommentServiceImpl implements CommentService {
         return commentsByPostId.stream().map(this::mapToDto).collect(Collectors.toList());
     }
 
-    private CommentDto mapToDto(Comment comment){
+    @Override
+    public CommentDto getCommentById(long postId, long commentId) {
+
+        this.postRepository.findById(postId).orElseThrow(() -> new ResourceNotFoundException("Post", "id", postId));
+
+        Comment comment = this.commentRepository.findById(commentId).orElseThrow(() -> new ResourceNotFoundException("Comment", "id", commentId));
+
+        return this.mapToDto(comment);
+    }
+
+    private CommentDto mapToDto(Comment comment) {
         CommentDto commentDto = new CommentDto();
         commentDto.setId(comment.getId());
         commentDto.setBody(comment.getBody());
@@ -59,7 +69,7 @@ public class CommentServiceImpl implements CommentService {
         return commentDto;
     }
 
-    private Comment mapToEntity(CommentDto commentDto){
+    private Comment mapToEntity(CommentDto commentDto) {
         Comment comment = new Comment();
         comment.setBody(commentDto.getBody());
         comment.setName(commentDto.getName());
