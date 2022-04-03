@@ -60,6 +60,20 @@ public class CommentServiceImpl implements CommentService {
         return this.mapToDto(comment);
     }
 
+    @Override
+    public CommentDto updateComment(long postId, long commentId, CommentDto commentDto) {
+
+        this.postRepository.findById(postId).orElseThrow(() -> new ResourceNotFoundException("Post", "id", postId));
+
+        Comment comment = this.commentRepository.findById(commentId).orElseThrow(() -> new ResourceNotFoundException("Comment", "id", commentId));
+        comment.setName(commentDto.getName());
+        comment.setBody(commentDto.getBody());
+        comment.setEmail(commentDto.getEmail());
+        Comment updatedComment = this.commentRepository.save(comment);
+
+        return this.mapToDto(updatedComment);
+    }
+
     private CommentDto mapToDto(Comment comment) {
         CommentDto commentDto = new CommentDto();
         commentDto.setId(comment.getId());
