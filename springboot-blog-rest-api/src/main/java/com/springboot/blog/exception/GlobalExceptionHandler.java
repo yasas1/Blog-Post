@@ -48,8 +48,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     /*
     * Customise field level error messages -> MethodArgumentNotValidException
     * */
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Object> handleResourceNotFoundException(MethodArgumentNotValidException exception){
+    @Override
+    public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception, HttpHeaders headers, HttpStatus status, WebRequest request){
         Map<String,String> errors = new HashMap<>();
         exception.getBindingResult().getAllErrors().forEach((error) -> errors.put(((FieldError)error).getField(), error.getDefaultMessage()));
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
